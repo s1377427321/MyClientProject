@@ -115,12 +115,15 @@ namespace SLua
         // Thread Funcs
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int lua_tothread(IntPtr L, int index);
+        //Exchange values between different threads of the same global state.
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_xmove(IntPtr from, IntPtr to, int n);
 
+        //L1 = lua_newthread ( L ) ;拥有了两个线程L和L1，它们内部都引用了相同的Lua状态。每个线程都有其自己的栈。新线程L1以一个空栈开始运行，老线程L的栈顶就是这个新线程。
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr lua_newthread(IntPtr L);
 
+        //Returns the status of the thread L
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int lua_status(IntPtr L);
 
@@ -187,6 +190,7 @@ namespace SLua
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int lua_rawequal(IntPtr luaState, int stackPos1, int stackPos2);
 
+        //给表中键为k的元素赋值value(value就是栈顶元素), 这里的表是由index指向的栈上的一个表无返回值
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_setfield(IntPtr luaState, int stackPos, string name);
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
@@ -217,6 +221,7 @@ namespace SLua
             return LuaDLL.luaL_dostring(luaState, chunk);
         }
 
+        //创建一个表格，放在栈顶
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_createtable(IntPtr luaState, int narr, int nrec);
         public static void lua_newtable(IntPtr luaState)
@@ -357,6 +362,7 @@ namespace SLua
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int lua_yield(IntPtr L, int nresults);
 
+        //把全局的name的值压到栈顶
         public static void lua_getglobal(IntPtr luaState, string name)
         {
             LuaDLL.lua_pushstring(luaState, name);
@@ -391,6 +397,7 @@ namespace SLua
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_call(IntPtr luaState, int nArgs, int nResults);
 
+        //调用栈顶元素
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int lua_pcall(IntPtr luaState, int nArgs, int nResults, int errfunc);
 
@@ -405,12 +412,15 @@ namespace SLua
             return LuaDLLWrapper.luaLS_loadbuffer(luaState, buff, size, name);
         }
 
+        //从栈中删除掉元素
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_remove(IntPtr luaState, int index);
 
+        // // 从注册表中读取该函数并调用
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_rawgeti(IntPtr luaState, int tableIndex, int index);
 
+        //等价于 t[n] = v， 这里的 t 是指给定索引 index 处的一个值， 而 v 是栈顶的值
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_rawseti(IntPtr luaState, int tableIndex, int index);
 
@@ -453,6 +463,8 @@ namespace SLua
         public static extern void lua_gettable(IntPtr luaState, int index);
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_rawget(IntPtr luaState, int index);
+
+        //弹出key,value，并设置到table里面去
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_settable(IntPtr luaState, int index);
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
@@ -472,11 +484,13 @@ namespace SLua
 
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_pushvalue(IntPtr luaState, int index);
-
+        //检查参数数量
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int lua_gettop(IntPtr luaState);
+
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern LuaTypes lua_type(IntPtr luaState, int index);
+
         public static bool lua_isnil(IntPtr luaState, int index)
         {
             return (LuaDLL.lua_type(luaState, index) == LuaTypes.LUA_TNIL);
@@ -490,6 +504,8 @@ namespace SLua
         {
             return LuaDLL.lua_type(luaState, index) == LuaTypes.LUA_TBOOLEAN;
         }
+
+        // 存放函数到注册表中并返回引用
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int luaL_ref(IntPtr luaState, int registryIndex);
 
@@ -596,6 +612,7 @@ namespace SLua
             LuaDLLWrapper.lua_pushboolean(luaState, value ? 1 : 0);
         }
 
+        //把string压入栈中
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_pushstring(IntPtr luaState, string str);
 
@@ -610,6 +627,8 @@ namespace SLua
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int luaL_newmetatable(IntPtr luaState, string meta);
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+
+        //第二个参数是table变量在栈中的索引值，最后一个参数是table的键值，该函数执行成功后会将字段值压入栈中。
         public static extern void lua_getfield(IntPtr luaState, int stackPos, string meta);
         public static void luaL_getmetatable(IntPtr luaState, string meta)
         {
@@ -657,7 +676,7 @@ namespace SLua
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int luaS_rawnetobj(IntPtr luaState, int obj);
 
-
+        ///如果给定索引处的值是一个完整的userdata，函数返回内存块的地址。如果值是一个lightuserdata，那么就返回它表示的指针。否则，返回NULL
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr lua_touserdata(IntPtr luaState, int index);
 

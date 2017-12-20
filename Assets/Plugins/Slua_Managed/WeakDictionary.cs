@@ -29,7 +29,8 @@ namespace SLua
 
 	public class WeakDictionary<K, V>
 	{
-		Dictionary<K, WeakReference> _dict = new Dictionary<K, WeakReference>();
+        //WeakReference  弱引用
+        Dictionary<K, WeakReference> _dict = new Dictionary<K, WeakReference>();
 
 		public V this[K key]
 		{

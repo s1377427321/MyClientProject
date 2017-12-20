@@ -39,7 +39,7 @@ namespace SLua
         protected int valueref = 0;
 
 
-
+        // IntPtr :“平台特定的整数类型”，它们用于本机资源，如窗口句柄
         public IntPtr L
         {
             get
@@ -437,14 +437,16 @@ namespace SLua
 
 
 
-
+    //IDisposable  让自己可以控制什么时候释放非托管资源 或者 处理资源释放时的操作
     public class LuaState : IDisposable
     {
         IntPtr l_;
         int mainThread = 0;
+        //internal 修饰的东西只能在本程序集（当前项目）内被使用
         internal WeakDictionary<int, LuaDelegate> delgateMap = new WeakDictionary<int, LuaDelegate>();
 
-		public int cachedDelegateCount{
+        //获取 delgateMap中  LuaDelegate 对象的数量
+        public int cachedDelegateCount{
 			get{
 				return this.delgateMap.AliveCount;
 			}
@@ -518,6 +520,7 @@ namespace SLua
 
         LuaFunction dumpstack;
 
+        //系统创建一个luaState的时候所在的系统线程id，就是这个state的id
         public bool isMainThread()
         {
             return System.Threading.Thread.CurrentThread.ManagedThreadId == mainThread;
@@ -540,6 +543,7 @@ namespace SLua
                 return ls;
             }
 
+            //把全局的name的值压到栈顶
             LuaDLL.lua_getglobal(l, "__main_state");
             if (LuaDLL.lua_isnil(l, -1))
             {
