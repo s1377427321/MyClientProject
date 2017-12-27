@@ -1,5 +1,4 @@
 ﻿using Client.UIFramework.UI;
-using LuaMgr;
 using PureMVC.Interfaces;
 using PureMVC.Patterns;
 

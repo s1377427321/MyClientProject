@@ -217,17 +217,26 @@ namespace SLua
 		{
 			return ++nextSn;
 		}
-		
-		internal static int add(IntPtr L,int delay, Action<int> handler)
+
+        public static int add(IntPtr L, int delay, Action<int> handler)
+        {
+            return add(L, delay, 0, (int sn) =>
+            {
+                handler(sn);
+                return false;
+            });
+        }
+
+        public static int add(int delay, Action<int> handler)
 		{
-			return add(L,delay, 0, (int sn) =>
+			return add((IntPtr)0,delay, 0, (int sn) =>
             {
 				handler(sn);
 				return false;
 			});
 		}
-		
-		internal static int add(IntPtr L,int delay, int cycle, Func<int, bool> handler)
+
+        public static int add(IntPtr L,int delay, int cycle, Func<int, bool> handler)
 		{
 			Timer tm = new Timer();
 			tm.sn = fetchSn();

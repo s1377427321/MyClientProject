@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
 using Client.UIFramework.UI;
 using VersionCtrl;
-using LuaMgr;
 using UnityEngine.UI;
-using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using Utils;
-using System;
+using LuaMgr;
 
 namespace UI
 {
@@ -165,12 +162,12 @@ namespace UI
                     break;
                 case AssetsMgr.State.DecompressFail:
                     isDownload = false;
-                    Debuger.LogError("解压失败");
+                    Debug.LogError("解压失败");
                     upToData(am);
                     break;
                 case AssetsMgr.State.FailToUpdate:
                     isDownload = false;
-                    Debuger.LogError(msg + " update fail");
+                    Debug.LogError(msg + " update fail");
                     upToData(am);
                     break;
                 case AssetsMgr.State.UpToData:

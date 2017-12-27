@@ -16,6 +16,8 @@
         public Transform normalRoot;
         public Transform popupRoot;
 
+        public EventSystem Event;
+
 
         public static Root Instance
         {
@@ -27,6 +29,13 @@
                 }
                 return m_Instance;
             }
+        }
+
+        private void Start()
+        {
+#if UNITY_STANDALONE
+            Screen.SetResolution(1334, 750, false);
+#endif
         }
 
         static void InitRoot()
@@ -76,6 +85,19 @@
             subRoot.name = "PopupRoot";
             m_Instance.popupRoot = subRoot.transform;
 
+
+            //add Event System
+            GameObject esObj = GameObject.Find("EventSystem");
+            if (esObj != null)
+            {
+                GameObject.DestroyImmediate(esObj);
+            }
+
+            GameObject eventObj = new GameObject("EventSystem");
+            eventObj.layer = LayerMask.NameToLayer("UI");
+            eventObj.transform.SetParent(go.transform);
+            m_Instance.Event = eventObj.AddComponent<EventSystem>();
+            eventObj.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
         }
 
         static GameObject CreateSubCanvasForRoot(Transform root, int sort)
@@ -90,7 +112,7 @@
             rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, 0);
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
-
+            can.transform.localScale = Vector3.one;
             can.overrideSorting = true;
             can.sortingOrder = sort;
 

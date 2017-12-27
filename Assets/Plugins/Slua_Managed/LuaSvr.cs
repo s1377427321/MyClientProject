@@ -243,5 +243,17 @@ namespace SLua
 			}
 			return null;
 		}
-	}
+
+        public object start(string main, bool updateSuccess, string gameName)
+        {
+            if (main != null)
+            {
+                mainState.doFile(main);
+                LuaFunction func = (LuaFunction)mainState["main"];
+                if (func != null)
+                    return func.call(updateSuccess, gameName);
+            }
+            return null;
+        }
+    }
 }

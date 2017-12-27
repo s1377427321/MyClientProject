@@ -9,16 +9,21 @@
         public const int ScreenWidth = 1334;
         public const int ScreenHeight = 750;
 
-        // Use this for initialization
-        void Start()
+        static bool isBind = false;
+
+        public static void bind()
         {
+            if (!isBind)
+            {
+                isBind = true;
+                //Debug.LogWarning("Bind For UI Framework.");
 
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+                //bind for your loader api to load UI.
+                //Page.delegateSyncLoadUI = Resources.Load;
+                Page.delegateSyncLoadUI = Utils.ResourceMgr.Instance.LoadGameObject;
+                //TTUIPage.delegateAsyncLoadUI = UILoader.Load;
+                Page.delegateAsyncLoadUI = Utils.ResourceMgr.Instance.LoadGameObjectAsync;
+            }
         }
     }
 

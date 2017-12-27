@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Client.UIFramework.UI;
+using Utils;
 
 public class GameManager : MonoBehaviour {
     static GameManager cur;
+    public static bool init = false;
 
     private void Awake()
     {
@@ -22,7 +24,7 @@ public class GameManager : MonoBehaviour {
         Application.targetFrameRate = 30;
         DontDestroyOnLoad(gameObject);
 
-        // AppFacade.getInstance().RegisterCommand("LoadGame",typ)
+        AppFacade.getInstance().RegisterCommand("LoadGame", typeof(LoadGameCommand));
         Init();
     }
 
@@ -39,8 +41,8 @@ public class GameManager : MonoBehaviour {
            {
                init = true;
                AppFacade.getInstance().SendNotification(Const.LoadGame);
-           }));
-
+           })
+        );
     }
 
     private void ClearCache()
